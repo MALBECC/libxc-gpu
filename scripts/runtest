@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+if [ -n "$SKIP_CHECK" ]; then
+  echo "Skipping checks"
+  exit 0
+fi
+
+if [ -z "$srcdir" ]; then
+  srcdir="./"
+fi
+
+if [ -z "$tmpdir" ]; then
+  tmpdir="/tmp"
+fi
+
+if [ -z "$builddir" ]; then
+  builddir="./"
+fi
+
+if [ -z "$testdir" ]; then
+  testdir="../objdir/testsuite"
+fi
+
+# We only print using colors if the output is going to a terminal
+if [ -t 1 ] ; then
+  NC='\033[0m'
+  RED='\033[1;31m'
+  GREEN='\033[1;32m'
+  YELLOW='\033[1;33m'
+  PINK='\033[1;35m'
+fi
+
+fail=0
+echo -e "${YELLOW}Test para libxc-cuda"
+##echo -e "Using ${srcdir} as src directory"
+##echo -e "Using ${workdir} as working directory"
+##echo -e "Using ${tmpdir} as tmp directory"
+echo -e "Using ${testdir} as testdir directory"
+
+func=gga_c_pbe
+func_gga_family=gga
+testcase=1
+system=Li
+order=1
+nspin=1
+label=exc
+
+echo $EXEC $testdir/xc-regression $func $nspin $order $testdir/input/$system  $testdir/output/$func_gga_family/$system.$func.$nspin.$order
+##$EXEC $testdir/xc-regression $func $nspin $order $testdir/input/$system  $testdir/output/$func_gga_family/$system.$func.$nspin.$order > /dev/null
+$EXEC $testdir/xc-regression $func $nspin $order $testdir/input/$system  $testdir/output/$func_gga_family/$system.$func.$nspin.$order
+echo -e "${NC} end..."
